@@ -1,6 +1,10 @@
 package com.jayway.jsonpath.internal.function;
 
 import com.jayway.jsonpath.InvalidPathException;
+import com.jayway.jsonpath.internal.function.indicator.Diff;
+import com.jayway.jsonpath.internal.function.indicator.Ema;
+import com.jayway.jsonpath.internal.function.indicator.Rsi;
+import com.jayway.jsonpath.internal.function.indicator.Sma;
 import com.jayway.jsonpath.internal.function.json.Append;
 import com.jayway.jsonpath.internal.function.json.KeySetFunction;
 import com.jayway.jsonpath.internal.function.numeric.Average;
@@ -55,6 +59,11 @@ public class PathFunctionFactory {
         map.put("last", Last.class);
         map.put("index", Index.class);
 
+        // Indicator Functions
+        map.put("sma", Sma.class);
+        map.put("ema", Ema.class);
+        map.put("rsi", Rsi.class);
+        map.put("diff", Diff.class);
 
         FUNCTIONS = Collections.unmodifiableMap(map);
     }
