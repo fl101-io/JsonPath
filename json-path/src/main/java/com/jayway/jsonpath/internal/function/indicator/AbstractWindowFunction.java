@@ -15,8 +15,8 @@ abstract public class AbstractWindowFunction extends AbstractIndicatorFunction {
 
     @Override
     public Object invoke(String currentPath, PathRef parent, Object model, EvaluationContext ctx, List<Parameter> parameters) {
-        int n = geParameter(ctx, parameters, 0, 0);
-        int k = geParameter(ctx, parameters, 1, 2);
+        int n = getParameter(ctx, parameters, 0, 0);
+        int k = getParameter(ctx, parameters, 1, 2);
         if (ctx.configuration().jsonProvider().isArray(model) && n > 0 && n <= ctx.configuration().jsonProvider().length(model)) {
             Iterable<?> objects = ctx.configuration().jsonProvider().toIterable(model);
             List<Double> prices = StreamSupport.stream(objects.spliterator(), false)
