@@ -48,7 +48,7 @@ allprojects {
     ext.buildTimestamp = new Date().format('yyyy-MM-dd HH:mm:ss')
 
     group = 'io.fl101.jsonpath'
-    version = '1.0.0'
+    version = '1.0.2'
 }
 
 subprojects {
