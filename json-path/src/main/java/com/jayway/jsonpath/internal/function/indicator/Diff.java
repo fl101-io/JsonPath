@@ -2,6 +2,7 @@ package com.jayway.jsonpath.internal.function.indicator;
 
 import com.jayway.jsonpath.internal.EvaluationContext;
 import com.jayway.jsonpath.internal.PathRef;
+import com.jayway.jsonpath.internal.function.AbstractPathFunction;
 import com.jayway.jsonpath.internal.function.Parameter;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class Diff extends AbstractIndicatorFunction {
+public class Diff extends AbstractPathFunction {
 
     @Override
     public Object invoke(String currentPath, PathRef parent, Object model, EvaluationContext ctx, List<Parameter> parameters) {
