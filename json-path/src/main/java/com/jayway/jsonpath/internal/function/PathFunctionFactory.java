@@ -16,8 +16,7 @@ import com.jayway.jsonpath.internal.function.numeric.Sum;
 import com.jayway.jsonpath.internal.function.sequence.First;
 import com.jayway.jsonpath.internal.function.sequence.Index;
 import com.jayway.jsonpath.internal.function.sequence.Last;
-import com.jayway.jsonpath.internal.function.text.Concatenate;
-import com.jayway.jsonpath.internal.function.text.Length;
+import com.jayway.jsonpath.internal.function.text.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,6 +53,9 @@ public class PathFunctionFactory {
         map.put("size", Length.class);
         map.put("append", Append.class);
         map.put("keys", KeySetFunction.class);
+        map.put("encode", UrlEncoder.class);
+        map.put("decode", UrlDecoder.class);
+        map.put("replaceAll", Replace.class);
         
         // Sequential Functions
         map.put("first", First.class);
