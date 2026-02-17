@@ -15,6 +15,7 @@ public class Diff extends AbstractPathFunction {
 
     @Override
     public Object invoke(String currentPath, PathRef parent, Object model, EvaluationContext ctx, List<Parameter> parameters) {
+        Object result = ctx.configuration().jsonProvider().createArray();
         if (null != parameters && !parameters.isEmpty()) {
             int k = Optional.ofNullable(parameters.get(1)).map(Parameter::getValue).map(o -> o instanceof Integer ? (Integer)o : 2).orElse(2);
             if (ctx.configuration().jsonProvider().isArray(model)) {
@@ -23,11 +24,14 @@ public class Diff extends AbstractPathFunction {
                 if (ctx.configuration().jsonProvider().isArray(innerModel)) {
                     List<Double> list2 = makeListFromModel(ctx, innerModel);
                     List<Double> diff = diff(list1, list2);
-                    return roundList(diff, k);
+                    int count = 0;
+                    for (Double r : roundList(diff, k)) {
+                        ctx.configuration().jsonProvider().setArrayIndex(result, count++, r);
+                    }
                 }
             }
         }
-        return new ArrayList<>();
+        return result;
     }
 
     private List<Double> makeListFromModel(EvaluationContext ctx, Object model) {

@@ -1,10 +1,7 @@
 package com.jayway.jsonpath.internal.function;
 
 import com.jayway.jsonpath.InvalidPathException;
-import com.jayway.jsonpath.internal.function.calc.Add;
-import com.jayway.jsonpath.internal.function.calc.Multiplication;
-import com.jayway.jsonpath.internal.function.calc.Round;
-import com.jayway.jsonpath.internal.function.calc.Trunc;
+import com.jayway.jsonpath.internal.function.calc.*;
 import com.jayway.jsonpath.internal.function.indicator.*;
 import com.jayway.jsonpath.internal.function.json.Append;
 import com.jayway.jsonpath.internal.function.json.KeySetFunction;
@@ -74,6 +71,9 @@ public class PathFunctionFactory {
         map.put("mul", Multiplication.class);
         map.put("round", Round.class);
         map.put("trunc", Trunc.class);
+        map.put("div", Division.class);
+        map.put("mod", ModularDivision.class);
+        map.put("pow", Power.class);
 
         FUNCTIONS = Collections.unmodifiableMap(map);
     }

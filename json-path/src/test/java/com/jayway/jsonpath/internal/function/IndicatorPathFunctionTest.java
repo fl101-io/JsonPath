@@ -1,8 +1,9 @@
 package com.jayway.jsonpath.internal.function;
 
 import com.jayway.jsonpath.*;
-import net.minidev.json.JSONArray;
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -443,113 +444,193 @@ public class IndicatorPathFunctionTest extends BaseFunctionTest {
     @ParameterizedTest
     @MethodSource("configurations")
     public void testSMA(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.sma(26,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedSMA26);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.sma(26,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedSMA26);
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.sma(26,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedSMA26);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testSMAOfEmpty(Configuration conf) {
-        List<?> result = using(conf).parse(empty).read("$.prices.sma(26,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(empty).read("$.prices.sma(26,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(empty).read("$.prices.sma(26,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testSMAIncorrectWindow(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.sma(101,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.sma(101,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.sma(101,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testSMASingleResult(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.sma(100,4)", ArrayList.class);
-        assertThat(result).isEqualTo(Collections.singletonList(109261.6352d));
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.sma(100,4)", ArrayList.class);
+            assertThat(result).isEqualTo(Collections.singletonList(109261.6352d));
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.sma(100,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(Collections.singletonList(109261.6352d));
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testEMA(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.ema(26,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedEMA26);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.ema(26,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedEMA26);
+        }  else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.ema(26,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedEMA26);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testEMAOfEmpty(Configuration conf) {
-        List<?> result = using(conf).parse(empty).read("$.prices.ema(26,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(empty).read("$.prices.ema(26,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(empty).read("$.prices.ema(26,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testEMAIncorrectWindow(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.ema(101,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.ema(101,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.ema(101,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testEMASingleResult(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.ema(100,4)", ArrayList.class);
-        assertThat(result).isEqualTo(Collections.singletonList(109261.6352d));
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.ema(100,4)", ArrayList.class);
+            assertThat(result).isEqualTo(Collections.singletonList(109261.6352d));
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.ema(100,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(Collections.singletonList(109261.6352d));
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testRSI(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.rsi(14,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedRSI14);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.rsi(14,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedRSI14);
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.rsi(14,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedRSI14);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testRSIOfEmpty(Configuration conf) {
-        List<?> result = using(conf).parse(empty).read("$.prices.rsi(14,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(empty).read("$.prices.rsi(14,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(empty).read("$.prices.rsi(14,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testRSIIncorrectWindow(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.rsi(100,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.rsi(100,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.rsi(100,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testStochRSI(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.stochrsi(14,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedStochRSI14);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.stochrsi(14,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedStochRSI14);
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.stochrsi(14,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedStochRSI14);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testStochRSIOfEmpty(Configuration conf) {
-        List<?> result = using(conf).parse(empty).read("$.prices.stochrsi(14,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(empty).read("$.prices.stochrsi(14,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(empty).read("$.prices.stochrsi(14,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testStochRSIIncorrectWindow(Configuration conf) {
-        List<?> result = using(conf).parse(prices).read("$.prices.stochrsi(51,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(prices).read("$.prices.stochrsi(51,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(prices).read("$.prices.stochrsi(51,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testDIFF(Configuration conf) {
-        List<?> result = using(conf).parse(ema).read("$.ema12.diff($.ema26,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedMACD1226);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(ema).read("$.ema12.diff($.ema26,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedMACD1226);
+        }  else {
+            JSONArray result = using(conf).parse(ema).read("$.ema12.diff($.ema26,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedMACD1226);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testDIFFOfEmpty(Configuration conf) {
-        List<?> result = using(conf).parse(empty).read("$.prices.diff($.prices,4)", ArrayList.class);
-        assertThat(result).isEqualTo(new ArrayList<>());
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(empty).read("$.prices.diff($.prices,4)", ArrayList.class);
+            assertThat(result).isEmpty();
+        } else {
+            JSONArray result = using(conf).parse(empty).read("$.prices.diff($.prices,4)", JSONArray.class);
+            assertThat(toList(result)).isEmpty();
+        }
     }
 
     @Test
@@ -557,11 +638,19 @@ public class IndicatorPathFunctionTest extends BaseFunctionTest {
         String klines = IOUtils.toString(getClass().getResourceAsStream("/klines.json"));
         DocumentContext doc = JsonPath.using(JSON_PATH_CONF).parse(klines);
         Object o = doc.read("$.klines[*].closePrice");
-        Object prices = "JSONArray".equals(o.getClass().getSimpleName()) ? new ArrayList<>(((JSONArray) o)) : o;
+        Object prices = "JSONArray".equals(o.getClass().getSimpleName()) ? new ArrayList<>(((net.minidev.json.JSONArray) o)) : o;
         doc.set("$.prices", prices);
         Object result = doc.read("$.prices.rsi(6,4)");
         assertThat(result).isNotNull();
         assertThat(result).isInstanceOfAny(ArrayList.class);
         assertThat(((ArrayList<?>)result).get(43)).isEqualTo(26.1033d);
+    }
+
+    private static List<Object> toList(JSONArray array) {
+        List<Object> list = new ArrayList<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            list.add(array.get(i));           // works with String, Integer, Boolean, JSONObject, ...
+        }
+        return list;
     }
 }
