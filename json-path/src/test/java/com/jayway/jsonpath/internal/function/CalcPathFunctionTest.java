@@ -3,11 +3,14 @@ package com.jayway.jsonpath.internal.function;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Configurations;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider;
+import org.json.JSONArray;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.jayway.jsonpath.JsonPath.using;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,6 +57,15 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
         expectedDoubleMulResult.add(1091.1794d);
     }
 
+    private static final List<Double> expectedDoubleAddMulResult;
+
+    static {
+        expectedDoubleAddMulResult = new ArrayList<>();
+        expectedDoubleAddMulResult.add(1091181.00d);
+        expectedDoubleAddMulResult.add(1091180.30d);
+        expectedDoubleAddMulResult.add(1091180.40d);
+    }
+
     private static final List<Long> expectedLongMulResult;
 
     static {
@@ -90,6 +102,96 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
         expectedDoubleTruncResult.add(109117d);
     }
 
+    private static final List<Double> expectedDoubleDivResult;
+
+    static {
+        expectedDoubleDivResult = new ArrayList<>();
+        expectedDoubleDivResult.add(54559.0000d);
+        expectedDoubleDivResult.add(54558.9650d);
+        expectedDoubleDivResult.add(54558.9700d);
+
+    }
+
+    private static final List<Double> expectedIntDivResult;
+
+    static {
+        expectedIntDivResult = new ArrayList<>();
+        expectedIntDivResult.add(350.0000d);
+        expectedIntDivResult.add(350.5000d);
+        expectedIntDivResult.add(351.0000d);
+
+    }
+
+    private static final List<Double> expectedLongDivResult;
+
+    static {
+        expectedLongDivResult = new ArrayList<>();
+        expectedLongDivResult.add(1.07374185E9d);
+        expectedLongDivResult.add(1.0737418505E9d);
+        expectedLongDivResult.add(1.073741851E9d);
+
+    }
+
+    private static final List<Double> expectedDoubleModResult;
+
+    static {
+        expectedDoubleModResult = new ArrayList<>();
+        expectedDoubleModResult.add(3.0000d);
+        expectedDoubleModResult.add(2.9300d);
+        expectedDoubleModResult.add(2.9400d);
+
+    }
+
+    private static final List<Integer> expectedIntModResult;
+
+    static {
+        expectedIntModResult = new ArrayList<>();
+        expectedIntModResult.add(0);
+        expectedIntModResult.add(1);
+        expectedIntModResult.add(2);
+
+    }
+
+    private static final List<Long> expectedLongModResult;
+
+    static {
+        expectedLongModResult = new ArrayList<>();
+        expectedLongModResult.add(0L);
+        expectedLongModResult.add(1L);
+        expectedLongModResult.add(2L);
+
+    }
+
+    private static final List<Double> expectedDoublePowerResult;
+
+    static {
+        expectedDoublePowerResult = new ArrayList<>();
+        expectedDoublePowerResult.add(330.33013789d);
+        expectedDoublePowerResult.add(330.33003194d);
+        expectedDoublePowerResult.add(330.33004707d);
+
+    }
+
+    private static final List<Double> expectedIntPowerResult;
+
+    static {
+        expectedIntPowerResult = new ArrayList<>();
+        expectedIntPowerResult.add(26.45751311d);
+        expectedIntPowerResult.add(26.47640459d);
+        expectedIntPowerResult.add(26.49528260d);
+
+    }
+
+    private static final List<Double> expectedLongPowerResult;
+
+    static {
+        expectedLongPowerResult = new ArrayList<>();
+        expectedLongPowerResult.add(46340.95057290d);
+        expectedLongPowerResult.add(46340.95058369d);
+        expectedLongPowerResult.add(46340.95059448d);
+
+    }
+
     public static Iterable<Configuration> configurations() {
         return Configurations.configurations();
     }
@@ -97,15 +199,37 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     @ParameterizedTest
     @MethodSource("configurations")
     public void testDoubleAdd(Configuration conf) {
-        List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.add(0.1,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedDoubleAddResult);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.add(0.1,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleAddResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.add(0.1,4)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleAddResult);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testDoubleMul(Configuration conf) {
-        List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.mul(0.01,4)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedDoubleMulResult);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.mul(0.01,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleMulResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.mul(0.01,4)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleMulResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testDoubleAddMul(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.add(0.1,4).mul(10,2)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleAddMulResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.add(0.1,4).mul(10,2)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleAddMulResult);
+        }
     }
 
     @ParameterizedTest
@@ -113,8 +237,13 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     public void testLongAdd(Configuration conf) {
         // Gson parses numbers to double
         if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
-            List<?> result = using(conf).parse(longNumbers).read("$.numbers.add(1)", ArrayList.class);
-            assertThat(result).isEqualTo(expectedLongAddResult);
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(longNumbers).read("$.numbers.add(1)", ArrayList.class);
+                assertThat(result).isEqualTo(expectedLongAddResult);
+            } else {
+                JSONArray result = using(conf).parse(longNumbers).read("$.numbers.add(1)", JSONArray.class);
+                assertThat(toList(result)).containsExactlyElementsOf(expectedLongAddResult);
+            }
         }
     }
 
@@ -123,8 +252,13 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     public void testLongMul(Configuration conf) {
         // Gson parses numbers to double
         if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
-            List<?> result = using(conf).parse(longNumbers).read("$.numbers.mul(3)", ArrayList.class);
-            assertThat(result).isEqualTo(expectedLongMulResult);
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(longNumbers).read("$.numbers.mul(3)", ArrayList.class);
+                assertThat(result).isEqualTo(expectedLongMulResult);
+            } else {
+                JSONArray result = using(conf).parse(longNumbers).read("$.numbers.mul(3)", JSONArray.class);
+                assertThat(toList(result)).containsExactlyElementsOf(expectedLongMulResult);
+            }
         }
     }
 
@@ -133,8 +267,13 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     public void testIntAdd(Configuration conf) {
         // Gson parses numbers to double
         if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
-            List<?> result = using(conf).parse(intNumbers).read("$.numbers.add(1)", ArrayList.class);
-            assertThat(result).isEqualTo(expectedIntAddResult);
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(intNumbers).read("$.numbers.add(1)", ArrayList.class);
+                assertThat(result).isEqualTo(expectedIntAddResult);
+            } else {
+                JSONArray result = using(conf).parse(intNumbers).read("$.numbers.add(1)", JSONArray.class);
+                assertThat(toList(result)).containsExactlyElementsOf(expectedIntAddResult);
+            }
         }
     }
 
@@ -143,23 +282,154 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     public void testIntMul(Configuration conf) {
         // Gson parses numbers to double
         if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
-            List<?> result = using(conf).parse(intNumbers).read("$.numbers.mul(700)", ArrayList.class);
-            assertThat(result).isEqualTo(expectedIntMulResult);
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(intNumbers).read("$.numbers.mul(700)", ArrayList.class);
+                assertThat(result).isEqualTo(expectedIntMulResult);
+            } else {
+                JSONArray result = using(conf).parse(intNumbers).read("$.numbers.mul(700)", JSONArray.class);
+                assertThat(toList(result)).containsExactlyElementsOf(expectedIntMulResult);
+            }
         }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testRound(Configuration conf) {
-        List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.round(0)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedDoubleRoundResult);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.round(0)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleRoundResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.round(0)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleRoundResult);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("configurations")
     public void testTrunc(Configuration conf) {
-        List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.trunc(0)", ArrayList.class);
-        assertThat(result).isEqualTo(expectedDoubleTruncResult);
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.trunc(0)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleTruncResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.trunc(0)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleTruncResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testDoubleDiv(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.div(2,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleDivResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.div(2,4)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedDoubleDivResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testIntDiv(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(intNumbers).read("$.numbers.div(2,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedIntDivResult);
+        } else {
+            JSONArray result = using(conf).parse(intNumbers).read("$.numbers.div(2,4)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedIntDivResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testLongDiv(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(longNumbers).read("$.numbers.div(2,4)", ArrayList.class);
+            result = result.stream().map(x -> ((Number)x).doubleValue()).collect(Collectors.toList());
+            assertThat(result).isEqualTo(expectedLongDivResult);
+        } else {
+            JSONArray result = using(conf).parse(longNumbers).read("$.numbers.div(2,4)", JSONArray.class);
+            assertThat(toList(result)).containsExactlyElementsOf(expectedLongDivResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testDoubleMod(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.mod(5,4)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoubleModResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.mod(5,4)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedDoubleModResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testIntMod(Configuration conf) {
+        // Gson parses numbers to double
+        if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(intNumbers).read("$.numbers.mod(5,4)", ArrayList.class);
+                assertThat(result).isEqualTo(expectedIntModResult);
+            } else {
+                JSONArray result = using(conf).parse(intNumbers).read("$.numbers.mod(5,4)", JSONArray.class);
+                assertThat(toList(result)).isEqualTo(expectedIntModResult);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testLongMod(Configuration conf) {
+        // Gson parses numbers to double
+        if (!(conf.jsonProvider() instanceof GsonJsonProvider)) {
+            if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+                List<?> result = using(conf).parse(longNumbers).read("$.numbers.mod(5,4)", ArrayList.class);
+                result = result.stream().map(x -> ((Number)x).longValue()).collect(Collectors.toList());
+                assertThat(result).isEqualTo(expectedLongModResult);
+            } else {
+                JSONArray result = using(conf).parse(longNumbers).read("$.numbers.mod(5,4)", JSONArray.class);
+                assertThat(toList(result)).isEqualTo(expectedLongModResult);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testDoublePower(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(doubleNumbers).read("$.numbers.pow(0.5,8)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedDoublePowerResult);
+        } else {
+            JSONArray result = using(conf).parse(doubleNumbers).read("$.numbers.pow(0.5,8)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedDoublePowerResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testIntPower(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(intNumbers).read("$.numbers.pow(0.5,8)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedIntPowerResult);
+        } else {
+            JSONArray result = using(conf).parse(intNumbers).read("$.numbers.pow(0.5,8)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedIntPowerResult);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurations")
+    public void testLongPower(Configuration conf) {
+        if (!(conf.jsonProvider() instanceof JsonOrgJsonProvider)) {
+            List<?> result = using(conf).parse(longNumbers).read("$.numbers.pow(0.5,8)", ArrayList.class);
+            assertThat(result).isEqualTo(expectedLongPowerResult);
+        } else {
+            JSONArray result = using(conf).parse(longNumbers).read("$.numbers.pow(0.5,8)", JSONArray.class);
+            assertThat(toList(result)).isEqualTo(expectedLongPowerResult);
+        }
     }
 
     @ParameterizedTest
@@ -199,5 +469,13 @@ public class CalcPathFunctionTest extends BaseFunctionTest {
     public void testSingleTruncValue(Configuration conf) {
         Object result = using(conf).parse(numbers).read("$.d.trunc(0)");
         assertThat(result).isEqualTo(109117d);
+    }
+
+    private static List<Object> toList(JSONArray array) {
+        List<Object> list = new ArrayList<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            list.add(array.get(i));
+        }
+        return list;
     }
 }

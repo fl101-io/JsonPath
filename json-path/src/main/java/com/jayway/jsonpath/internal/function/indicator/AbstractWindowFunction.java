@@ -5,7 +5,6 @@ import com.jayway.jsonpath.internal.PathRef;
 import com.jayway.jsonpath.internal.function.AbstractPathFunction;
 import com.jayway.jsonpath.internal.function.Parameter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,14 +17,19 @@ abstract public class AbstractWindowFunction extends AbstractPathFunction {
     public Object invoke(String currentPath, PathRef parent, Object model, EvaluationContext ctx, List<Parameter> parameters) {
         int n = getParameter(ctx, parameters, 0, 0).intValue();
         int k = getParameter(ctx, parameters, 1, 2).intValue();
+        Object result = ctx.configuration().jsonProvider().createArray();
         if (ctx.configuration().jsonProvider().isArray(model) && n > 0 && n <= ctx.configuration().jsonProvider().length(model)) {
             Iterable<?> objects = ctx.configuration().jsonProvider().toIterable(model);
             List<Double> prices = StreamSupport.stream(objects.spliterator(), false)
                     .filter(Number.class::isInstance)
                     .map(obj -> ((Number) obj).doubleValue())
                     .collect(Collectors.toList());
-            return roundList(calculate(prices, n), k);
+
+            int count = 0;
+            for (Double r : roundList(calculate(prices, n), k)) {
+                ctx.configuration().jsonProvider().setArrayIndex(result, count++, r);
+            }
         }
-        return new ArrayList<Double>();
+        return result;
     }
 }
